@@ -1,0 +1,324 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,300;9..144,400;9..144,500;9..144,600;9..144,700;9..144,900&family=Manrope:wght@200;300;400;500;600;700&family=Dancing+Script:wght@500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+    :root {
+        --background: 42 43% 98%;
+        --foreground: 30 8% 15%;
+        --card: 42 43% 98%;
+        --card-foreground: 30 8% 15%;
+        --popover: 42 43% 98%;
+        --popover-foreground: 30 8% 15%;
+        --primary: 30 8% 15%;
+        --primary-foreground: 42 43% 98%;
+        --secondary: 38 40% 94%;
+        --secondary-foreground: 30 8% 15%;
+        --muted: 38 40% 94%;
+        --muted-foreground: 30 5% 45%;
+        --accent: 42 74% 60%;
+        --accent-foreground: 30 8% 15%;
+        --destructive: 0 60% 55%;
+        --destructive-foreground: 42 43% 98%;
+        --border: 38 20% 88%;
+        --input: 38 20% 88%;
+        --ring: 42 74% 60%;
+        --radius: 0.75rem;
+    }
+}
+
+html, body {
+    margin: 0;
+    padding: 0;
+    background: #FDFBF7;
+    color: #2C2A26;
+    font-family: 'Manrope', ui-sans-serif, system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    overflow-x: hidden;
+}
+
+body { min-height: 100vh; }
+
+::selection {
+    background: #EABF45;
+    color: #2C2A26;
+}
+
+/* Custom cursor — hide default on desktop */
+@media (hover: hover) and (pointer: fine) {
+    html, body, a, button, input, label, [role="button"] {
+        cursor: none !important;
+    }
+}
+
+/* Grain overlay */
+.grain-overlay {
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 60;
+    opacity: 0.08;
+    mix-blend-mode: multiply;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 0.17  0 0 0 0 0.16  0 0 0 0 0.15  0 0 0 0.85 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+/* Masked line reveal (used with framer-motion + inline styles) */
+.line-mask { display: block; overflow: hidden; padding: 0.05em 0; }
+.line-mask > span { display: block; will-change: transform; }
+
+/* Soft mesh gradient background helper */
+.mesh-warm {
+    background:
+      radial-gradient(60% 60% at 20% 20%, rgba(234,191,69,0.35), transparent 60%),
+      radial-gradient(50% 50% at 80% 30%, rgba(242,166,141,0.35), transparent 60%),
+      radial-gradient(70% 70% at 60% 90%, rgba(226,172,177,0.35), transparent 60%),
+      linear-gradient(180deg, #FDFBF7 0%, #FAF6EE 100%);
+}
+
+.mesh-dream {
+    background:
+      radial-gradient(50% 60% at 30% 40%, rgba(220,208,255,0.55), transparent 60%),
+      radial-gradient(60% 60% at 70% 60%, rgba(162,179,150,0.35), transparent 60%),
+      linear-gradient(180deg, #1A1D2E 0%, #232744 100%);
+}
+
+/* Specific transitions — never `transition: all` */
+button, input, a {
+    transition: background-color 350ms ease, color 350ms ease, border-color 350ms ease, opacity 350ms ease;
+}
+
+/* Reel tile clip */
+.tile-clip {
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%);
+    transition: clip-path 700ms cubic-bezier(0.22, 1, 0.36, 1), transform 700ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* Reel thumbnail film grain — animated so it reads like a projected film print */
+.reel-grain {
+    opacity: 0.14;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 160 160' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='rn'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1  0 0 0 0 1  0 0 0 0 1  0 0 0 0.9 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23rn)'/%3E%3C/svg%3E");
+    background-size: 180px 180px;
+    animation: reelGrainShift 0.7s steps(3) infinite;
+}
+@keyframes reelGrainShift {
+    0%   { background-position: 0 0; }
+    33%  { background-position: -60px 40px; }
+    66%  { background-position: 40px -30px; }
+    100% { background-position: -20px -50px; }
+}
+
+/* Reel thumbnail soft vignette — darkens edges for a curated frame look */
+.reel-vignette {
+    background: radial-gradient(120% 120% at 50% 45%, transparent 52%, rgba(20,14,8,0.28) 82%, rgba(12,8,4,0.5) 100%);
+    box-shadow: inset 0 0 40px rgba(0,0,0,0.28);
+}
+
+/* Marquee track — kill browser text-drag ghost image completely so hold+drag
+   doesn't spawn floating "copied text" like grabbing a link. */
+.marquee-track,
+.marquee-track * {
+    -webkit-user-drag: none;
+    -khtml-user-drag: none;
+    -moz-user-drag: none;
+    -o-user-drag: none;
+    user-drag: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+    -webkit-touch-callout: none;
+}
+
+/* Prevent horizontal scroll during in-flight animations */
+main { overflow-x: clip; }
+
+@media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        scroll-behavior: auto !important;
+        transition-duration: 0.01ms !important;
+    }
+}
+
+/* Hide scrollbars visually while keeping scroll usable */
+::-webkit-scrollbar { width: 0; background: transparent; }
+html { scrollbar-width: none; }
+
+/* Photo book card stack */
+.book-card { transform-origin: left center; will-change: transform, opacity; }
+
+/* interactive photo book */
+.book-perspective { perspective: 1800px; }
+.book-page {
+  position: absolute;
+  inset: 0;
+  transform-style: preserve-3d;
+  transform-origin: left center;
+  will-change: transform;
+}
+.page-face {
+  position: absolute;
+  inset: 0;
+  border-radius: 0.5rem;
+  overflow: hidden;
+  backface-visibility: hidden;
+  -webkit-backface-visibility: hidden;
+}
+.page-face--back { transform: rotateY(180deg); }
+
+/* Organic, water-like wavy edges for the album — corners morph slowly so the
+   book feels flowy rather than a rigid rectangle. */
+.book-wavy {
+  border-radius: 14px 26px 16px 24px / 24px 16px 26px 18px;
+  animation: bookWave 9s ease-in-out infinite alternate;
+}
+@keyframes bookWave {
+  0%   { border-radius: 14px 26px 16px 24px / 24px 16px 26px 18px; }
+  50%  { border-radius: 22px 16px 26px 16px / 16px 26px 18px 24px; }
+  100% { border-radius: 18px 24px 14px 28px / 26px 14px 24px 16px; }
+}
+
+/* Soft watery wash that pools behind the book and blooms while a page turns. */
+.water-ripple {
+  background:
+    radial-gradient(45% 40% at 28% 38%, rgba(96,170,205,0.30), transparent 72%),
+    radial-gradient(50% 46% at 72% 62%, rgba(180,150,225,0.24), transparent 72%),
+    radial-gradient(40% 42% at 52% 50%, rgba(234,191,69,0.20), transparent 72%),
+    radial-gradient(60% 60% at 50% 50%, rgba(150,200,220,0.12), transparent 78%);
+  filter: blur(26px);
+  animation: waterFlow 8s ease-in-out infinite alternate;
+}
+@keyframes waterFlow {
+  0%   { transform: scale(1.0) translate(-2%, 1%) rotate(-1deg); }
+  100% { transform: scale(1.14) translate(3%, -2%) rotate(1.5deg); }
+}
+/* concentric caustic rings that expand from the spine during a flip */
+.water-caustic {
+  background:
+    repeating-radial-gradient(circle at 0% 50%,
+      rgba(255,255,255,0.10) 0px,
+      rgba(255,255,255,0.10) 2px,
+      transparent 2px,
+      transparent 22px);
+  mix-blend-mode: screen;
+  animation: causticDrift 6s linear infinite;
+}
+@keyframes causticDrift {
+  0%   { background-position: 0 0; }
+  100% { background-position: 60px 0; }
+}
+/* gentle water ripple that blooms from exactly where a page is grabbed */
+.book-ripple {
+  position: absolute;
+  width: 18px;
+  height: 18px;
+  margin: -9px 0 0 -9px;
+  border-radius: 9999px;
+  border: 1.5px solid rgba(150,205,225,0.5);
+  background: radial-gradient(circle, rgba(185,222,236,0.28) 0%, rgba(185,222,236,0.08) 45%, transparent 70%);
+  mix-blend-mode: screen;
+  pointer-events: none;
+  animation: bookRipple 1.15s ease-out forwards;
+}
+@keyframes bookRipple {
+  0%   { transform: scale(0.25); opacity: 0.6; }
+  100% { transform: scale(12); opacity: 0; }
+}
+
+/* Gold-foil shimmer for the album cover title */
+.foil-text {
+    background: linear-gradient(100deg, #6f4f2f 0%, #9a6f34 18%, #d9b45f 34%, #f7e6b0 48%, #fff6d8 52%, #d9b45f 66%, #9a6f34 82%, #6f4f2f 100%);
+    background-size: 240% 100%;
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    color: transparent;
+    animation: foilShine 4.5s ease-in-out infinite;
+}
+@keyframes foilShine {
+    0%   { background-position: 0% 0; }
+    50%  { background-position: 100% 0; }
+    100% { background-position: 0% 0; }
+}
+
+/* Warm paper grain — used on the back of every book page so verso feels real */
+.page-paper {
+  background-color: #f5efe4;
+  background-image:
+    radial-gradient(rgba(120, 90, 50, 0.06) 1px, transparent 1px),
+    radial-gradient(rgba(120, 90, 50, 0.045) 1px, transparent 1px),
+    linear-gradient(180deg, #f6efe1 0%, #efe6d1 100%);
+  background-size: 3px 3px, 5px 5px, 100% 100%;
+  background-position: 0 0, 1px 2px, 0 0;
+}
+
+
+/* ============ Atmosphere layers ============ */
+/* Underwater ocean gradient (jellyfish section) */
+.ocean-layer {
+    background:
+      radial-gradient(120% 70% at 50% -10%, rgba(120,200,230,0.28), transparent 55%),
+      linear-gradient(180deg, #17475f 0%, #103a56 32%, #0a2b47 62%, #051a30 100%);
+}
+.ocean-rays {
+    position: absolute;
+    inset: -20% -10% 0 -10%;
+    background:
+      linear-gradient(102deg, transparent 42%, rgba(190,235,255,0.10) 50%, transparent 58%),
+      linear-gradient(78deg, transparent 44%, rgba(190,235,255,0.07) 51%, transparent 60%);
+    filter: blur(6px);
+    animation: rayShimmer 9s ease-in-out infinite alternate;
+    transform-origin: top center;
+}
+@keyframes rayShimmer {
+    0%   { opacity: 0.5; transform: translateX(-2%) skewX(-2deg); }
+    100% { opacity: 0.9; transform: translateX(2%) skewX(2deg); }
+}
+.bubbles { position: absolute; inset: 0; overflow: hidden; }
+.bubble {
+    position: absolute;
+    bottom: -8%;
+    border-radius: 9999px;
+    background: radial-gradient(circle at 32% 28%, rgba(255,255,255,0.85), rgba(180,225,245,0.28) 55%, rgba(180,225,245,0.05) 80%);
+    box-shadow: inset 0 0 6px rgba(255,255,255,0.35);
+    animation-name: bubbleRise;
+    animation-timing-function: ease-in;
+    animation-iteration-count: infinite;
+    will-change: transform, opacity;
+}
+@keyframes bubbleRise {
+    0%   { transform: translate(0, 0) scale(0.7); opacity: 0; }
+    12%  { opacity: 1; }
+    88%  { opacity: 1; }
+    100% { transform: translate(var(--drift, 0px), -112vh) scale(1.05); opacity: 0; }
+}
+
+/* Sunrise backlight (finale) */
+.finale-glow {
+    background:
+      radial-gradient(42% 52% at 50% 40%, rgba(255,216,128,0.60) 0%, rgba(255,190,110,0.30) 34%, rgba(255,175,90,0.0) 70%),
+      radial-gradient(80% 80% at 50% 44%, rgba(255,206,120,0.16) 0%, transparent 72%);
+    animation: glowPulse 6s ease-in-out infinite alternate;
+}
+@keyframes glowPulse {
+    0%   { filter: brightness(0.95); }
+    100% { filter: brightness(1.12); }
+}
+
+/* Drifting warm colour wash (growth + butterfly) */
+.aurora-glow {
+    background:
+      radial-gradient(38% 48% at 76% 28%, rgba(246,178,148,0.38), transparent 70%),
+      radial-gradient(44% 54% at 20% 72%, rgba(250,208,138,0.34), transparent 70%),
+      radial-gradient(30% 40% at 60% 55%, rgba(232,178,182,0.22), transparent 70%);
+    animation: auroraDrift 18s ease-in-out infinite alternate;
+}
+@keyframes auroraDrift {
+    0%   { transform: translate3d(-1.5%, -1%, 0) scale(1.02); }
+    100% { transform: translate3d(1.5%, 1.5%, 0) scale(1.06); }
+}

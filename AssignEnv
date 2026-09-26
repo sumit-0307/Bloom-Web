@@ -1,0 +1,7 @@
+$nodePath = "C:\Users\SumitUpadhyay\NodeJS\node-v22.11.0-win-x64"
+$userPath = [Environment]::GetEnvironmentVariable('Path', 'User')
+if ($userPath -notlike "*$nodePath*") {
+    [Environment]::SetEnvironmentVariable("Path", "$userPath;$nodePath", "User")
+}
+# Apply to current open session immediately
+$env:Path += ";$nodePath"
